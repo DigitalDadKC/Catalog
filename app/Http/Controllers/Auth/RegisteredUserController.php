@@ -32,7 +32,17 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255', 'unique:' . User::class,
+                function ($attribute, $value, $fail) {
+                    if (!str_contains($value, 'wtiservices.com') && !str_contains($value, 'tremcoinc.com')) {
+                        $fail('Thank you for your interest in signing up! However, this is a company-reserved tool!');
+                    }
+                }
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 

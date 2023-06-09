@@ -12,12 +12,12 @@ use App\Http\Controllers\Controller;
 class PricebookController extends Controller
 {
     // Show all listings
-    public function index(Request $request)
+    public function index($cooperative = "BOOK")
     {
         $search_filter = request()->query('search');
-        $coop_filter = request()->query('filter-radio');
+        $cooperative = request()->query('filter-radio');
         $category_filter = request()->query('filter-checkbox');
-        $discount = ($coop_filter) ? $this->get_discount(request()->query('filter-radio')) : 0;
+        $discount = ($cooperative) ? $this->get_discount($cooperative) : 0;
         $categories = MaterialCategory::get();
         $cooperatives = Cooperative::get();
         return view(
@@ -27,23 +27,11 @@ class PricebookController extends Controller
                 'materials' => Pricebook::query()->SearchFilter($search_filter)->CategoryFilter($category_filter)->paginate(30),
                 'discount' => $discount,
                 'cooperatives' => $cooperatives,
-                'coop_filter' => $coop_filter,
+                'cooperative' => $cooperative,
                 'categories' => $categories,
                 'category_filter' => $category_filter
             ]
         );
-    }
-
-    public function fetch(Request $request)
-    {
-        if ($request->get('search')) {
-            $query = $request->get('search');
-            $materials = Pricebook::with('materialUnitSizes', 'materialCategories', 'materialStatuses')
-                ->where('Name', 'LIKE', "%{$query}%")
-                ->orWhere('SKU', 'Like', "%{$query}%")
-                ->get();
-            echo json_encode($materials);
-        }
     }
 
     protected function get_discount($coop)
