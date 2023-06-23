@@ -42,19 +42,6 @@ class PricebookSeeder extends Seeder
         }
         fclose($csvFile);
 
-        $csvFile = fopen(base_path("database/material_status.csv"), "r");
-
-        $firstline = true;
-        while (($data = fgetcsv($csvFile, null, ",")) !== false) {
-            if (!$firstline) {
-                MaterialStatus::create([
-                    "Status" => $data['0']
-                ]);
-            }
-            $firstline = false;
-        }
-        fclose($csvFile);
-
         Pricebook::truncate();
         $csvFile = fopen(base_path("database/pricebook.csv"), "r");
 
@@ -65,10 +52,12 @@ class PricebookSeeder extends Seeder
                     "SKU" => $data['0'],
                     "Name" => $data['1'],
                     "fk_unit_size" => $data['2'],
-                    "Price" => ($data['3'] !== 'NULL') ? $data['3'] : NULL,
-                    "fk_status" => ($data['4'] !== 'NULL') ? $data['4'] : NULL,
-                    "Discountable" => $data['5'],
-                    "fk_category" => $data['6']
+                    "PB_FY24_1" => ($data['3'] !== 'NULL') ? $data['3'] : NULL,
+                    "PB_FY24_1_Status" => ($data['4'] !== 'NULL') ? $data['4'] : NULL,
+                    "PB_FY23_3" => ($data['5'] !== 'NULL') ? $data['5'] : NULL,
+                    "PB_FY23_3_Status" => ($data['6'] !== 'NULL') ? $data['6'] : NULL,
+                    "Discountable" => $data['7'],
+                    "fk_category" => $data['8']
                 ]);
             }
             $firstline = false;

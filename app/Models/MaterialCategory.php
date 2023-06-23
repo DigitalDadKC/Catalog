@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MaterialCategory extends Model
 {
     use HasFactory;
     protected $table = 'material_categories';
     protected $primaryKey = 'id';
-    protected $fillable = ['Name'];
     public function pricebook()
     {
-        return $this->belongsTo(Pricebook::class, 'id', 'fk_category');
+        return $this->hasMany(Pricebook::class, 'fk_category', 'id');
     }
 }

@@ -4,15 +4,20 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-screen-2xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-screen-4xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="col-span-1 p-4 bg-gray-100 text-center">
-                    <form action="{{ route('pricebook')}}/BOOK" id="pricebookForm">
+                    <form action="{{ route('pricebook')}}" id="pricebookForm">
                         <x-side-panel title="SEARCH">
                             <x-search :search="$search_placeholder" />
                         </x-side-panel>
                         <x-side-panel title='COOPERATIVES'>
-                            <x-filter-radio :filter="$cooperatives" :selected="$cooperative" />
+                            <ul class="w-full">
+                                <li><x-cooperative-radio-button cooperative="BOOK" date="June 1, 2023" :selected="$cooperative_filter" /></li>
+                                <li><x-cooperative-radio-button cooperative="AEPA" date="January 1, 2023" :selected="$cooperative_filter" /></li>
+                                <li><x-cooperative-radio-button cooperative="E&I" date="January 1, 2023" :selected="$cooperative_filter" /></li>
+                                <li><x-cooperative-radio-button cooperative="OMNIA" date="January 1, 2023" :selected="$cooperative_filter" /></li>
+                            </ul>
                         </x-side-panel>
                         <x-side-panel title="CATEGORIES">
                             <x-filter-checkbox :filter="$categories" :selected="$category_filter" />
@@ -24,7 +29,7 @@
                     <div class="mt-6 p-4">
                         {{$materials->appends(['search' => request()->query('search'), 'filter-radio' => request()->query('filter-radio'), 'filter-checkbox' => request()->query('filter-checkbox')])->links()}}
                     </div>
-                    @include('references.partials._pricebook-table', ['materials'=>$materials])
+                    @include('references.partials._pricebook-table', ['materials'=>$materials, 'pricebook'=>$pricebook, 'discount'=>$discount])
                 </div>
             </div>
         </div>

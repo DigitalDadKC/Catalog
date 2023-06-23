@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pricebook extends Model
 {
     use HasFactory;
+    use \Awobaz\Compoships\Compoships;
+
     protected $table = 'pricebooks';
     protected $primaryKey = 'id';
-    protected $fillable = ['SKU', 'Name', 'fk_unit_size', 'Price', 'fk_status', 'Discountable', 'fk_category'];
 
     public function scopeSearchFilter($query, $search)
     {
@@ -28,14 +29,10 @@ class Pricebook extends Model
     }
     public function materialUnitSizes()
     {
-        return $this->hasMany(MaterialUnitSize::class, 'id', 'fk_unit_size');
+        return $this->belongsTo(MaterialUnitSize::class, 'fk_unit_size', 'id');
     }
     public function materialCategories()
     {
-        return $this->hasMany(MaterialCategory::class, 'id', 'fk_category');
-    }
-    public function materialStatuses()
-    {
-        return $this->hasMany(MaterialStatus::class, 'id', 'fk_status');
+        return $this->belongsTo(MaterialCategory::class, 'fk_category', 'id');
     }
 }

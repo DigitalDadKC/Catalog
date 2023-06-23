@@ -2,7 +2,7 @@
 
 <ul>
     <li class="text-left">
-        <input type="hidden" name="filter-checkbox[0]" value="0">
+        <input type="hidden" name="filter-checkbox[]" value="0">
         <input type="checkbox" id="filter-checkbox-select-all" name="filter-checkbox[]" value="BOOK"
         @checked($selected == null || !in_array(0, $selected))
         >

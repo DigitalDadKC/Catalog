@@ -13,14 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()->create([
-            'name' => 'Raleigh',
-            'email' => 'raleighgroesbeck@gmail.com',
-            'password' => bcrypt('KSUwildcat#5')
-        ]);
+        // $user = User::factory()->create([
+        //     'name' => 'Raleigh',
+        //     'email' => 'raleighgroesbeck@gmail.com',
+        //     'password' => bcrypt('KSUwildcat#5')
+        // ]);
 
-        $this->call([PricebookSeeder::class]);
-        $this->call([StateSeeder::class]);
+        $this->call(PricebookSeeder::class);
+        $this->call(StateSeeder::class);
+        $this->call(RoleSeeder::class);
+        $this->call(AdminSeeder::class);
 
         // \App\Models\User::factory(10)->create();
 

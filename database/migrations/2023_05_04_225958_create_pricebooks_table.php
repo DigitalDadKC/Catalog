@@ -33,8 +33,10 @@ return new class extends Migration {
             $table->string('SKU');
             $table->string('Name');
             $table->foreignId('fk_unit_size')->constrained(table: 'material_unit_sizes');
-            $table->decimal('Price', 10, 2)->nullable()->default(NULL);
-            $table->foreignId('fk_status')->nullable()->constrained(table: 'material_statuses');
+            $table->decimal('PB_FY24_1', 10, 2)->nullable()->default(NULL);
+            $table->enum('PB_FY24_1_Status', ['New', 'Removed', 'Obsolete'])->nullable();
+            $table->decimal('PB_FY23_3', 10, 2)->nullable()->default(NULL);
+            $table->enum('PB_FY23_3_Status', ['New', 'Removed', 'Obsolete'])->nullable();
             $table->boolean('Discountable');
             $table->foreignId('fk_category')->constrained(table: 'material_categories');
             $table->timestamps();

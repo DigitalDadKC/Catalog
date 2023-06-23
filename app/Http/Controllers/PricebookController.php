@@ -12,22 +12,25 @@ use App\Http\Controllers\Controller;
 class PricebookController extends Controller
 {
     // Show all listings
-    public function index($cooperative = "BOOK")
+    public function index($cooperative_filter = "BOOK")
     {
         $search_filter = request()->query('search');
-        $cooperative = request()->query('filter-radio');
+        $cooperative_filter = request()->query('filter-radio');
         $category_filter = request()->query('filter-checkbox');
-        $discount = ($cooperative) ? $this->get_discount($cooperative) : 0;
+        $discount = ($cooperative_filter) ? $this->get_discount($cooperative_filter) : 0;
+        $pricebook = $this->get_pricebook($cooperative_filter);
+        $materials = Pricebook::query()->with(['MaterialCategories', 'MaterialUnitSizes'])->SearchFilter($search_filter)->CategoryFilter($category_filter)->orderBy("id", "ASC")->paginate(30);
         $categories = MaterialCategory::get();
         $cooperatives = Cooperative::get();
         return view(
             'references.pricebook',
             [
                 'search_placeholder' => "Search Pricebook...",
-                'materials' => Pricebook::query()->SearchFilter($search_filter)->CategoryFilter($category_filter)->paginate(30),
+                'materials' => $materials,
                 'discount' => $discount,
+                'pricebook' => $pricebook,
                 'cooperatives' => $cooperatives,
-                'cooperative' => $cooperative,
+                'cooperative_filter' => $cooperative_filter,
                 'categories' => $categories,
                 'category_filter' => $category_filter
             ]
@@ -40,7 +43,7 @@ class PricebookController extends Controller
             $discount = 0;
         } else if ($coop == "AEPA" || $coop == "CES" || $coop == "ESCNJ" || $coop == "CMAS") {
             $discount = .134;
-        } else if ($coop == "EI" || $coop == "IPHEC") {
+        } else if ($coop == "E&I" || $coop == "IPHEC") {
             $discount = .133;
         } else if ($coop == "OMNIA") {
             $discount = .132;
@@ -51,10 +54,26 @@ class PricebookController extends Controller
         }
         return $discount;
     }
-}
 
-// {
-//     return view('listings.index', [
-//         'listings' => Listing::latest()->filter(request(['tag', 'search']))->paginate(6)
-//     ]);
-// }
+    protected function get_pricebook($coop)
+    {
+        switch ($coop) {
+            case "AEPA":
+                $pb['pricebook_column'] = "PB_FY23_3";
+                $pb['pricebook_status_column'] = "PB_FY23_3_Status";
+                break;
+            case "E&I":
+                $pb['pricebook_column'] = "PB_FY23_3";
+                $pb['pricebook_status_column'] = "PB_FY23_3_Status";
+                break;
+            case "OMNIA":
+                $pb['pricebook_column'] = "PB_FY23_3";
+                $pb['pricebook_status_column'] = "PB_FY23_3_Status";
+                break;
+            default:
+                $pb['pricebook_column'] = "PB_FY24_1";
+                $pb['pricebook_status_column'] = "PB_FY24_1_Status";
+        }
+        return $pb;
+    }
+}
